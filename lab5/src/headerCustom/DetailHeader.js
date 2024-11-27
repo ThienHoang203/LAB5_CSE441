@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const ServiceDetailHeader = () => {
+const DetailHeader = props => {
   const navigation = useNavigation();
   const popupMenuRef = useRef(null);
   const route = useRoute();
@@ -111,7 +111,7 @@ const ServiceDetailHeader = () => {
         <Icon name="arrow-back" style={styles.arrow} />
       </TouchableOpacity>
 
-      <Text style={styles.title}>Service detail</Text>
+      <Text style={styles.title}>{props.title}</Text>
 
       <TouchableOpacity style={styles.optionsWrapper} onPress={triggerMenu}>
         <Icon name="ellipsis-vertical-outline" style={styles.arrow} />
@@ -123,9 +123,11 @@ const ServiceDetailHeader = () => {
             <MenuOptions style={styles.popupWrapper}>
               <MenuOption
                 onSelect={() => {
-                  navigation.navigate('ServiceUpdate', {item: item});
+                  navigation.navigate(props.updateScreenName, {item: item});
                 }}>
-                <Text style={[{color: 'blue'}, styles.popupTitle]}>Update</Text>
+                <Text style={[{color: 'blue'}, styles.popupTitle]}>
+                  {props.popUpTitle1}
+                </Text>
               </MenuOption>
               <MenuOption
                 onSelect={() =>
@@ -143,7 +145,9 @@ const ServiceDetailHeader = () => {
                     },
                   ])
                 }>
-                <Text style={[{color: 'red'}, styles.popupTitle]}>Delete</Text>
+                <Text style={[{color: 'red'}, styles.popupTitle]}>
+                  {props.popUpTitle2}
+                </Text>
               </MenuOption>
             </MenuOptions>
           </Menu>
@@ -153,4 +157,4 @@ const ServiceDetailHeader = () => {
   );
 };
 
-export default ServiceDetailHeader;
+export default DetailHeader;

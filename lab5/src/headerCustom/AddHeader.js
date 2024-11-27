@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
   optionsWrapper: {},
 });
 
-const ServiceAddHeader = () => {
+const AddHeader = ({title}) => {
   const navigation = useNavigation();
 
   const handlePressArrow = () => {
@@ -43,9 +43,9 @@ const ServiceAddHeader = () => {
         <Icon name="arrow-back" style={styles.arrow} />
       </TouchableOpacity>
 
-      <Text style={styles.title}>Service add</Text>
+      <Text style={styles.title}>{title}</Text>
     </View>
   );
 };
 
-export default ServiceAddHeader;
+export default AddHeader;

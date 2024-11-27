@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const HomeHeader = headingTitle => {
+const HomeHeader = ({headingTitle}) => {
   const navigation = useNavigation();
 
   return (
