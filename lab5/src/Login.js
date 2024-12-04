@@ -97,6 +97,8 @@ const Login = () => {
     setIconPressed(!iconPressed);
   };
   const handlePressLogin = async (phoneParam, passwordParam) => {
+    console.log('hello');
+
     const data = {
       phone: phoneParam,
       password: passwordParam,

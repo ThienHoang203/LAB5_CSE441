@@ -10,6 +10,8 @@ import CustomerAdd from './customer/CustomerAdd';
 import TransactionDetail from './transaction/TransactionDetail';
 import CustomerDetail from './customer/CustomerDetail';
 import DetailHeader from './headerCustom/DetailHeader';
+import TransactionAdd from './transaction/TransactionAdd';
+import TransactionDHeader from './headerCustom/TransactionDetailHeader';
 
 const Stack = createStackNavigator();
 
@@ -20,6 +22,7 @@ const custom = {
       updateScreenName="ServiceUpdate"
       popUpTitle1="Update"
       popUpTitle2="Delete"
+      deleteURL="https://kami-backend-5rs0.onrender.com/services/"
     />
   ),
   serviceUpdateHeader: () => <ServiceUpdateHeader />,
@@ -28,19 +31,24 @@ const custom = {
   customerDetailHeader: () => (
     <DetailHeader
       title="Customer detail"
-      updateScreenName="ServiceUpdate"
+      updateScreenName="CustomerAdd"
       popUpTitle1="Edit"
       popUpTitle2="Delete"
+      deleteTitle="Are you sure you want to remove this client? This will not be possible return."
+      deleteURL="https://kami-backend-5rs0.onrender.com/Customers/"
     />
   ),
   transactionDetailHeader: () => (
-    <DetailHeader
+    <TransactionDHeader
       title="Transaction detail"
       updateScreenName="ServiceUpdate"
       popUpTitle1="See more detail"
-      popUpTitle2="Delete"
+      popUpTitle2="Cancel transaction"
+      deleteTitle="Are you sure want to cancel this transaction? This will affect the customer transaction information"
+      deleteURL="https://kami-backend-5rs0.onrender.com/transactions/"
     />
   ),
+  transactionAddHeader: () => <AddHeader title="Add transaction" />,
 };
 
 const AppScreen = () => {
@@ -91,6 +99,13 @@ const AppScreen = () => {
         component={TransactionDetail}
         options={{
           header: custom.transactionDetailHeader,
+        }}
+      />
+      <Stack.Screen
+        name="TransactionAdd"
+        component={TransactionAdd}
+        options={{
+          header: custom.transactionAddHeader,
         }}
       />
     </Stack.Navigator>

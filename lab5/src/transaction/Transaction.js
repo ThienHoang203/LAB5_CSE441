@@ -50,7 +50,7 @@ const Transaction = () => {
     }
   };
   const handlePressAddIcon = () => {
-    navigation.navigate('CustomerAdd');
+    navigation.navigate('TransactionAdd');
   };
 
   const handlePressTransaction = item => {

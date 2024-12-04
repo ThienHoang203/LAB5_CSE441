@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import {useSelector} from 'react-redux';
 import {borderColor, redApp} from '../utils/colorVariables';
+import {StackActions, useNavigation} from '@react-navigation/native';
 
 const styles = StyleSheet.create({
   container: {
@@ -44,10 +45,12 @@ const styles = StyleSheet.create({
   },
 });
 
-const CustomerAdd = () => {
+const CustomerAdd = ({route}) => {
+  const params = route.params;
   const [error, setError] = useState('');
-  const [phone, setPhone] = useState('');
-  const [name, setName] = useState('');
+  const [phone, setPhone] = useState(params == null ? '' : params.item.phone);
+  const [name, setName] = useState(params == null ? '' : params.item.name);
+  const navigation = useNavigation();
   const token = useSelector(state => state.userInfo.info.token);
   const validatePhoneNumber = number => {
     const phoneRegex = /^(03|05|07|08|09|01[2|6|8|9])+([0-9]{8})$/;
@@ -66,7 +69,7 @@ const CustomerAdd = () => {
       Alert.alert('Error', 'Invalid phone number!');
       return;
     }
-    if (typeof token === 'undefined') {
+    if (typeof tokenParam === 'undefined') {
       return;
     }
     const data = {
@@ -94,6 +97,57 @@ const CustomerAdd = () => {
       console.error('Error:', err);
     }
   };
+  const handlePressEdit = async ({
+    phoneParam,
+    nameParam,
+    customerIDParam,
+    tokenParam,
+  }) => {
+    if (nameParam === '') {
+      Alert.alert('Error', "missing customer's name!");
+      return;
+    }
+    if (phoneParam === '') {
+      Alert.alert('Error', "missing customer's phone number!");
+      return;
+    }
+    if (!validatePhoneNumber(phoneParam)) {
+      Alert.alert('Error', 'Invalid phone number!');
+      return;
+    }
+    if (typeof tokenParam === 'undefined') {
+      return;
+    }
+    if (typeof customerIDParam === 'undefined') {
+      return;
+    }
+    const data = {
+      phone: phoneParam,
+      name: nameParam,
+    };
+
+    const config = {
+      method: 'put',
+      maxBodyLength: Infinity,
+      url: `https://kami-backend-5rs0.onrender.com/customers/${customerIDParam}`,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${tokenParam}`,
+      },
+      data: data,
+    };
+
+    try {
+      const response = await axios(config);
+      console.log(response);
+      Alert.alert('Successful!');
+      navigation.dispatch(StackActions.pop(2));
+    } catch (err) {
+      setError(err);
+      console.error('Error:', err);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
@@ -124,14 +178,23 @@ const CustomerAdd = () => {
       </View>
       <TouchableOpacity
         onPress={() => {
-          handlePressAdd({
-            phoneParam: phone,
-            nameParam: name,
-            tokenParam: token,
-          });
+          if (params == null) {
+            handlePressAdd({
+              phoneParam: phone,
+              nameParam: name,
+              tokenParam: token,
+            });
+          } else {
+            handlePressEdit({
+              phoneParam: phone,
+              nameParam: name,
+              tokenParam: token,
+              customerIDParam: params.item.id,
+            });
+          }
         }}
         style={styles.addBtnWrapper}>
-        <Text style={styles.addText}>Add</Text>
+        <Text style={styles.addText}>{params == null ? 'Add' : 'Update'}</Text>
       </TouchableOpacity>
     </View>
   );

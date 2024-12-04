@@ -87,7 +87,7 @@ const Home = () => {
       const arr = [...response.data];
       const mappedServices = arr.map(item => mapServices(item));
       setServices(mappedServices);
-      console.log(mappedServices);
+      // console.log(mappedServices);
     } catch (err) {
       setError(err);
       console.error('Error:', err);

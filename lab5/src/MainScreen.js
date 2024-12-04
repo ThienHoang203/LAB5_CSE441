@@ -2,7 +2,6 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Login from './Login';
 import AppScreen from './AppScreen';
-import ServicesDetail from './home/ServicesDetail';
 
 const Stack = createStackNavigator();
 

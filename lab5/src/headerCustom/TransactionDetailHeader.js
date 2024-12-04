@@ -1,13 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useRef, useState} from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  Alert,
-  Button,
-} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import {StackActions, useNavigation, useRoute} from '@react-navigation/native';
 import {redApp} from '../utils/colorVariables';
@@ -65,7 +58,7 @@ const styles = StyleSheet.create({
   },
 });
 
-const DetailHeader = props => {
+const TransactionDetailHeader = props => {
   const navigation = useNavigation();
   const popupMenuRef = useRef(null);
   const route = useRoute();
@@ -96,7 +89,7 @@ const DetailHeader = props => {
     const config = {
       method: 'delete',
       maxBodyLength: Infinity,
-      url: `${props.deleteURL}${item.id}`,
+      url: `${props.deleteURL}${item._id}`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
@@ -191,4 +184,4 @@ const DetailHeader = props => {
   );
 };
 
-export default DetailHeader;
+export default TransactionDetailHeader;

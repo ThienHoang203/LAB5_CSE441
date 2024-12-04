@@ -1,9 +1,14 @@
+/* eslint-disable react-native/no-inline-styles */
 import axios from 'axios';
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {redApp} from '../utils/colorVariables';
-import {calculateElapsedTime, formatDate} from '../utils/map';
-import {ScrollView} from 'react-native-gesture-handler';
+import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {borderColor, redApp} from '../utils/colorVariables';
+import {
+  calculateElapsedTime,
+  formatDate,
+  formatDateShort,
+  formattedCurrency,
+} from '../utils/map';
 
 const styles = StyleSheet.create({
   container: {
@@ -34,11 +39,69 @@ const styles = StyleSheet.create({
     flex: 1,
     borderWidth: 1,
   },
+  transactionContainer: {
+    borderWidth: 1,
+    borderColor: borderColor,
+    borderRadius: 8,
+    marginVertical: 5,
+    padding: 10,
+  },
+  detailTransactionContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  detailTransactionWrapper: {
+    flex: 5,
+  },
+  priceTransactionWrapper: {
+    flex: 3,
+  },
+  priceTransactionText: {
+    textAlign: 'right',
+    fontSize: 14,
+    fontWeight: '700',
+    color: redApp,
+  },
 });
+
+const renderServiceTransaction = ({item}) => {
+  return (
+    <Text style={{marginVertical: 1}} numberOfLines={1}>
+      - {item.name}
+    </Text>
+  );
+};
+
+const renderTransactionHistory = ({item}) => {
+  return (
+    <TouchableOpacity style={styles.transactionContainer} id={item.id}>
+      <Text style={[styles.detailText, {fontWeight: '700'}]} numberOfLines={1}>
+        {item.id} {'-'} {formatDateShort(item.createdAt)}
+      </Text>
+      <View style={[styles.detailTransactionContainer, {marginTop: 5}]}>
+        <View style={styles.detailTransactionWrapper}>
+          <FlatList
+            data={item.services}
+            renderItem={renderServiceTransaction}
+            // eslint-disable-next-line no-shadow
+            keyExtractor={item => item._id}
+          />
+        </View>
+
+        <View style={styles.priceTransactionWrapper}>
+          <Text style={styles.priceTransactionText} numberOfLines={1}>
+            {formattedCurrency(item.price)}
+          </Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
+};
 
 const CustomerDetail = ({route}) => {
   const customerID = route.params.item.id;
-  console.log(customerID);
   const [userData, setUserData] = useState(null);
   const [error, setError] = useState('');
   const [name, setName] = useState('null');
@@ -50,7 +113,6 @@ const CustomerDetail = ({route}) => {
 
   const fetchCustomer = async () => {
     const data = {};
-
     const config = {
       method: 'get',
       maxBodyLength: Infinity,
@@ -82,7 +144,6 @@ const CustomerDetail = ({route}) => {
     if (userData === null) {
       return;
     }
-    console.log('User name', userData.name);
 
     setName(userData.name);
     setPhone(userData.phone);
@@ -90,9 +151,10 @@ const CustomerDetail = ({route}) => {
     setTime(calculateElapsedTime(userData.createdAt));
     setLastUpdate(formatDate(userData.updatedAt));
     setTransactions(userData.transactions);
+    console.log(userData.transactions);
   }, [userData]);
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.InfoContainer}>
         <Text style={styles.heading}>General information</Text>
         <View>
@@ -157,11 +219,16 @@ const CustomerDetail = ({route}) => {
           </Text>
         </View>
       </View>
+
       <View style={styles.InfoContainer}>
         <Text style={styles.heading}>Transaction history</Text>
-        <View>{transactions.map((item, index) => {})}</View>
+        <FlatList
+          data={transactions}
+          renderItem={renderTransactionHistory}
+          keyExtractor={item => item.id}
+        />
       </View>
-    </ScrollView>
+    </View>
   );
 };
 
